@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { CreditCard } from '$lib/types/CreditCard';
+    import { DateTime } from 'luxon';
     import { createEventDispatcher } from 'svelte';
     import CardBrandPreview from './CardBrandPreview.svelte';
 
@@ -13,6 +14,21 @@
 
     function removeCard() {
         dispatch('removed', card.id);
+    }
+
+    function GetDaysLeft(): string {
+        const raw = card.dueDate.diffNow('days').days;
+        const days = Math.floor(raw);
+
+        if (days === 1) {
+            return `${days} day`;
+        }
+
+        if (days > 1) {
+            return `${days} days`;
+        }
+
+        return 'Today';
     }
 </script>
 
@@ -44,6 +60,20 @@
                 <div class="truncate text-sm font-medium text-gray-500">Due Date</div>
                 <div class="text-3xl font-semibold tracking-tight text-gray-900">
                     {card.dueDate.toFormat('LL/dd/yyyy')}
+                </div>
+            </div>
+            <div>
+                <div class="truncate text-sm font-medium text-gray-500">Due</div>
+                <div class="text-3xl font-semibold tracking-tight text-gray-900">
+                    {#if card.payment?.weeksUntilDue !== undefined && card.payment?.weeksUntilDue > 1}
+                        {card.payment?.weeksUntilDue} weeks
+                    {:else if card.payment?.weeksUntilDue === 0 && card.payment.pastDue}
+                        Past Due
+                    {:else if card.payment?.weeksUntilDue === 0 && !card.payment.pastDue}
+                        {GetDaysLeft()}
+                    {:else}
+                        {card.payment?.weeksUntilDue} week
+                    {/if}
                 </div>
             </div>
         </div>

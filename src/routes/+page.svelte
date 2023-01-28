@@ -24,6 +24,12 @@
             return Number(prev) + Number(curr);
         }, 0);
 
+    $: weeklyPayment = cardValues
+        .map((value) => value.payment?.weeklyPayment)
+        .reduce((prev, curr) => {
+            return Number(prev) + Number(curr);
+        }, 0);
+
     function startNewCard() {
         selectedCard = new CreditCard();
         addingCard = true;
@@ -61,6 +67,8 @@
         <div>$ {totalBalance}</div>
         <div class="font-bold">Total Limit:</div>
         <div>$ {totalLimit}</div>
+        <div class="font-bold">Weekly Payment:</div>
+        <div>$ {weeklyPayment}</div>
     </div>
     <div>
         <button
