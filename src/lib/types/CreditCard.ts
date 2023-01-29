@@ -17,7 +17,7 @@ export interface ICreditCard {
 }
 
 export class CreditCard implements ICreditCard {
-    public readonly id: string = uuid();
+    public id: string = uuid();
 
     private _limit: number;
     public get limit(): number {
@@ -25,6 +25,11 @@ export class CreditCard implements ICreditCard {
     }
 
     public set limit(value: number) {
+        if (isNaN(value) || value <= 0) {
+            this._limit = 0;
+            this.updatePayment();
+            return;
+        }
         this._limit = value;
         this.updatePayment();
     }
@@ -35,6 +40,11 @@ export class CreditCard implements ICreditCard {
     }
 
     public set balance(value: number) {
+        if (isNaN(value) || value <= 0) {
+            this._balance = 0;
+            this.updatePayment();
+            return;
+        }
         this._balance = value;
         this.updatePayment();
     }
@@ -42,6 +52,10 @@ export class CreditCard implements ICreditCard {
     private _dueDate: DateTime;
     public get dueDate(): DateTime {
         return this._dueDate;
+    }
+
+    public get dueDateFormatted(): string {
+        return this._dueDate.toFormat('LL/dd/yyyy');
     }
 
     public set dueDate(value: DateTime) {
@@ -62,6 +76,24 @@ export class CreditCard implements ICreditCard {
 
     private _rate: number;
     public get rate(): number {
+        return this._rate;
+    }
+
+    public set rate(value: number) {
+        if (isNaN(value) || value <= 0) {
+            this._rate = 0;
+            return;
+        }
+
+        if (value >= 100) {
+            this._rate = 1;
+            return;
+        }
+
+        this._rate = value;
+    }
+
+    public get ratePercent(): number {
         if (this._rate === 0) {
             return 0;
         }
@@ -70,28 +102,9 @@ export class CreditCard implements ICreditCard {
             return 1;
         }
 
-        const outRate = Math.round(this._rate * 10000) / 100;
-        console.log('CreditCard::Rate:Set: %s -> %s', this._rate, outRate);
-        return outRate;
-    }
-
-    public set rate(value: number) {
-        if (value === 0) {
-            this._rate = 0;
-            return;
-        }
-
-        if (value >= 100) {
-            this.rate = 1;
-            return;
-        }
-
-        this._rate = Math.round((value / 100) * 10000) / 10000;
-        console.log('CreditCard::Rate:Set: %s -> %s', value, this._rate);
-    }
-
-    public get ratePercent(): number {
-        return this._rate;
+        const rate = Math.round((this._rate / 100) * 10000) / 10000;
+        console.log('CreditCard::Rate:Set: %s -> %s', this._rate, rate);
+        return rate;
     }
 
     public brand: CardBrand = CardBrand.Generic;
@@ -129,6 +142,24 @@ export class CreditCard implements ICreditCard {
 
     public static new(limit: number, balance: number, rate: number, dueDate: DateTime): CreditCard {
         return new CreditCard(limit, balance, rate, dueDate);
+    }
+
+    public static fromDB(
+        id: string,
+        limit: number,
+        balance: number,
+        rate: number,
+        brand: CardBrand,
+        dueDate: string
+    ): CreditCard {
+        var data = new CreditCard();
+        data.id = id;
+        data.limit = limit;
+        data.balance = balance;
+        data.rate = rate;
+        data.brand = brand;
+        data.dueDate = DateTime.fromISO(dueDate);
+        return data;
     }
 
     private updatePayment(): void {

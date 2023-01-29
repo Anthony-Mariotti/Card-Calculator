@@ -1,12 +1,19 @@
 <script lang="ts">
     import type { CreditCard } from '$lib/types/CreditCard';
-    import { DateTime } from 'luxon';
-    import { createEventDispatcher } from 'svelte';
+    import { createEventDispatcher, onMount, beforeUpdate } from 'svelte';
     import CardBrandPreview from './CardBrandPreview.svelte';
 
     export let card: CreditCard;
 
     const dispatch = createEventDispatcher();
+
+    onMount(() => {
+        console.log('CardPreview::onMount::card:', card);
+    });
+
+    beforeUpdate(() => {
+        console.log('CardPreview::beforeUpdate::card:', card);
+    });
 
     function editCard() {
         dispatch('edit', card);
@@ -59,38 +66,68 @@
             <div>
                 <div class="truncate text-sm font-medium text-gray-500">Due Date</div>
                 <div class="text-3xl font-semibold tracking-tight text-gray-900">
-                    {card.dueDate.toFormat('LL/dd/yyyy')}
+                    {card.dueDateFormatted}
                 </div>
             </div>
             <div>
                 <div class="truncate text-sm font-medium text-gray-500">Due</div>
                 <div class="text-3xl font-semibold tracking-tight text-gray-900">
-                    {#if card.payment?.weeksUntilDue !== undefined && card.payment?.weeksUntilDue > 1}
-                        {card.payment?.weeksUntilDue} weeks
-                    {:else if card.payment?.weeksUntilDue === 0 && card.payment.pastDue}
+                    {#if card.balance === 0 && !card.payment?.pastDue}
+                        Paid
+                    {:else if card.payment === undefined}
+                        Unknown
+                    {:else if card.payment.pastDue && card.balance !== 0}
                         Past Due
-                    {:else if card.payment?.weeksUntilDue === 0 && !card.payment.pastDue}
-                        {GetDaysLeft()}
+                    {:else if card.payment.weeksUntilDue === undefined}
+                        Unknown
+                    {:else if card.payment.weeksUntilDue > 1}
+                        {card.payment.weeksUntilDue} weeks
+                    {:else if card.payment.weeksUntilDue === 1}
+                        {card.payment.weeksUntilDue} week
                     {:else}
-                        {card.payment?.weeksUntilDue} week
+                        {GetDaysLeft()}
                     {/if}
                 </div>
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-3 gap-2">
+        <button
+            type="button"
+            class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 p-2 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+            <svg
+                class="w-6 h-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                />
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+            </svg>
+        </button>
         <button
             on:click={editCard}
             type="button"
             class="inline-flex items-center rounded-md border border-transparent bg-gray-600 p-2 text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
         >
             <svg
+                class="w-6 h-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6"
             >
                 <path
                     stroke-linecap="round"
@@ -105,12 +142,12 @@
             class="inline-flex items-center rounded-md border border-transparent bg-red-600 p-2 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
         >
             <svg
+                class="w-6 h-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke-width="1.5"
                 stroke="currentColor"
-                class="w-6 h-6"
             >
                 <path
                     stroke-linecap="round"

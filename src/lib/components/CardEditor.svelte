@@ -77,7 +77,7 @@
                             </div>
                             <input
                                 bind:value={card.balance}
-                                type="text"
+                                type="number"
                                 name="balance"
                                 id="balance"
                                 class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -105,7 +105,7 @@
                             </div>
                             <input
                                 bind:value={card.limit}
-                                type="text"
+                                type="number"
                                 name="limit"
                                 id="limit"
                                 class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -130,7 +130,7 @@
                             />
                             <input
                                 bind:value={card.rate}
-                                type="text"
+                                type="number"
                                 name="limit"
                                 id="limit"
                                 class="block w-full rounded-md border-gray-300 pl-3 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"

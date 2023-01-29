@@ -24,7 +24,7 @@ export function CalculatePayment(
                 weeklyPayment,
                 weeksUntilDue,
                 accruedInterest,
-                pastDue: IsPastDue(card.dueDate)
+                pastDue: IsPastDue(card.balance, card.dueDate)
             });
         }
         return schedule;
@@ -43,7 +43,7 @@ export function CalculatePayment(
             weeklyPayment,
             weeksUntilDue,
             accruedInterest,
-            pastDue: IsPastDue(card.dueDate)
+            pastDue: IsPastDue(card.balance, card.dueDate)
         };
     }
 }
@@ -66,6 +66,10 @@ const CalculateWeeklyPayment = (balance: number, weeksUntilDue: number): number 
         return 0;
     }
 
+    if (balance !== 0 && weeksUntilDue === 0) {
+        return balance;
+    }
+
     var rawPayment = balance / weeksUntilDue;
     return Math.round((rawPayment + Number.EPSILON) * 100) / 100;
 };
@@ -78,6 +82,10 @@ const CalculateInterest = (balance: number, interestRate: number): number => {
     return Math.round((rawInterest + Number.EPSILON) * 100) / 100;
 };
 
-const IsPastDue = (dueDate: DateTime): boolean => {
+const IsPastDue = (balance: number, dueDate: DateTime): boolean => {
+    if (balance === 0) {
+        return false;
+    }
+
     return dueDate <= DateTime.now();
 };

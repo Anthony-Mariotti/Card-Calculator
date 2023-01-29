@@ -1,21 +1,36 @@
+import { browser } from '$app/environment';
 import type { CreditCard } from '$lib/types/CreditCard';
 
 import { writable } from 'svelte/store';
 import { validate } from 'uuid';
+import { CreditCardStore } from './credit.store';
+
+let db: CreditCardStore | undefined;
 
 function createCardStore() {
     const { subscribe, set, update } = writable<Array<CreditCard>>([]);
 
     return {
         subscribe,
-        add: (card: CreditCard) =>
+        init: async () => {
+            if (browser) {
+                db = await CreditCardStore.connect();
+            }
+
+            if (db !== undefined) {
+                set(await db.getAll());
+            }
+        },
+        add: (card: CreditCard) => {
+            console.log('Adding card: ', card);
             update((n) => {
-                console.log('Adding card: ', card);
                 return [...n, card];
-            }),
-        remove: (id: string) =>
+            });
+            db?.add(card);
+        },
+        remove: (id: string) => {
+            console.log('Deleting card: %s', id);
             update((n) => {
-                console.log('Deleting card: %s', id);
                 if (validate(id)) {
                     const index = n.findIndex((x) => x.id === id);
                     if (index > -1) {
@@ -23,10 +38,12 @@ function createCardStore() {
                     }
                 }
                 return n;
-            }),
-        edit: (id: string, card: CreditCard) =>
+            });
+            db?.delete(id);
+        },
+        edit: (id: string, card: CreditCard) => {
+            console.log('Editing card: %s', id);
             update((n) => {
-                console.log('Editing card: %s', id);
                 if (validate(id)) {
                     const index = n.findIndex((x) => x.id === id);
                     if (index > -1) {
@@ -34,7 +51,9 @@ function createCardStore() {
                     }
                 }
                 return n;
-            }),
+            });
+            db?.update(id, card);
+        },
         clear: () => {
             console.log('Clearing all cards');
             set([]);

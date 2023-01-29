@@ -118,4 +118,44 @@ describe('payment calculator', () => {
 
         assert.deepEqual(result, expected);
     });
+
+    test('handle due date less than a week', () => {
+        const future = DateTime.now().plus({ days: 4 });
+        const inputCard: CreditCard = new CreditCard();
+        inputCard.limit = 5000;
+        inputCard.balance = 1000;
+        inputCard.rate = 2.5;
+        inputCard.dueDate = future;
+
+        const expected: PaymentSchedule = {
+            weeklyPayment: 1000,
+            weeksUntilDue: 0,
+            accruedInterest: 25,
+            pastDue: false
+        };
+
+        const result = CalculatePayment(inputCard);
+
+        assert.deepEqual(result, expected);
+    });
+
+    test('past due is false when balance is zero', () => {
+        const current = DateTime.now();
+        const inputCard: CreditCard = new CreditCard();
+        inputCard.limit = 5000;
+        inputCard.balance = 0;
+        inputCard.rate = 2.5;
+        inputCard.dueDate = current;
+
+        const expected: PaymentSchedule = {
+            weeklyPayment: 0,
+            weeksUntilDue: 0,
+            accruedInterest: 0,
+            pastDue: false
+        };
+
+        const result = CalculatePayment(inputCard);
+
+        assert.deepEqual(result, expected);
+    });
 });
