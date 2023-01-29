@@ -1,18 +1,6 @@
-# create-svelte
+# Card Calculator (Work in Progress)
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+Quickly calculate how much you need to pay off your credit cards each week to reach a zero dollar balance. We don't want to pay that interest! As noted in the title this project is a work in progress so there are going to be a lot of issues. Scroll down to view the list of items that I would like to work on and what has already been implemented.
 
 ## Developing
 
@@ -25,6 +13,10 @@ npm run dev
 npm run dev -- --open
 ```
 
+You can also use [Visual Studio Code](https://code.visualstudio.com/) and run thea debug session with breakpoints with the configuration `Server/Client`. Make sure to stop both the `Server` and the `Client` when attempting to stop debugging since they both run on independent taks.
+
+You shouldn't need to restart the debug session often as `vite` should handle hot reloading code for you, but it still breaks sometimes 🙂.
+
 ## Building
 
 To create a production version of your app:
@@ -36,3 +28,9 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+The adapter currently installed is for github pages, so swap out the desired adapter for your own setup.
+
+## Work in Progress
+
+-   [ ]
