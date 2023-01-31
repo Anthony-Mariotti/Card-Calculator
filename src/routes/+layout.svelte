@@ -1,5 +1,20 @@
 <script lang="ts">
+    import { page } from '$app/stores';
+    import { env } from '$env/dynamic/public';
     import '../app.css';
+
+    function privacyPolicy(): string {
+        if (env.PUBLIC_PRIVACY_POLICY === undefined || env.PUBLIC_PRIVACY_POLICY === '') {
+            return 'https://github.com/Anthony-Mariotti/Card-Calculator/blob/main/PRIVACY.md';
+        }
+
+        return env.PUBLIC_PRIVACY_POLICY;
+    }
+
+    let navOpen = false;
+    function toggleNavigation() {
+        navOpen = !navOpen;
+    }
 </script>
 
 <div class="min-h-full">
@@ -19,23 +34,27 @@
                             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                             <a
                                 href="/"
-                                class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                                class="{$page.url.pathname === '/'
+                                    ? 'bg-gray-900 text-white'
+                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'} px-3 py-2 rounded-md text-sm font-medium"
                                 aria-current="page">Home</a
                             >
 
                             <a
-                                href="/about"
+                                href={privacyPolicy()}
                                 class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                                target="_blank"
+                                rel="noreferrer">Privacy</a
+                            >
+
+                            <a
+                                href="/about"
+                                class="{$page.url.pathname === '/about'
+                                    ? 'bg-gray-900 text-white'
+                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'} px-3 py-2 rounded-md text-sm font-medium"
                                 >About</a
                             >
-
                             <!--
-                            <a
-                                href="#"
-                                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                                >Projects</a
-                            >
-
                             <a
                                 href="#"
                                 class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
@@ -70,10 +89,11 @@
                 <div class="-mr-2 flex md:hidden">
                     <!-- Mobile menu button -->
                     <button
+                        on:click={() => toggleNavigation()}
                         type="button"
                         class="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                         aria-controls="mobile-menu"
-                        aria-expanded="false"
+                        aria-expanded={navOpen}
                     >
                         <span class="sr-only">Open main menu</span>
                         <!--
@@ -82,7 +102,7 @@
                             Menu open: "hidden", Menu closed: "block"
                         -->
                         <svg
-                            class="block h-6 w-6"
+                            class="block h-6 w-6 {navOpen ? 'hidden' : ''}"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -102,7 +122,7 @@
                             Menu open: "block", Menu closed: "hidden"
                         -->
                         <svg
-                            class="hidden h-6 w-6"
+                            class="{navOpen ? '' : 'hidden'} h-6 w-6"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -122,28 +142,33 @@
         </div>
 
         <!-- Mobile menu, show/hide based on menu state. -->
-        <div class="md:hidden" id="mobile-menu">
+        <div class="{navOpen ? '' : 'hidden'} md:hidden" id="mobile-menu">
             <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
 
                 <a
                     href="/"
-                    class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
+                    class="{$page.url.pathname === '/'
+                        ? 'bg-gray-900 text-white'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'} block px-3 py-2 rounded-md text-base font-medium"
                     aria-current="page">Home</a
                 >
 
                 <a
-                    href="/about"
+                    href={privacyPolicy()}
                     class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    target="_blank"
+                    rel="noreferrer">Privacy</a
+                >
+                <a
+                    href="/about"
+                    class="{$page.url.pathname === '/about'
+                        ? 'bg-gray-900 text-white'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'} block px-3 py-2 rounded-md text-base font-medium"
                     >About</a
                 >
                 <!--
-                <a
-                    href="#"
-                    class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                    >Projects</a
-                >
-
+                
                 <a
                     href="#"
                     class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
@@ -176,7 +201,7 @@
         </div>
     </nav>
     <main>
-        <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
             <slot />
         </div>
     </main>
