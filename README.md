@@ -19,7 +19,7 @@ You shouldn't need to restart the debug session often as `vite` should handle ho
 
 ## Building
 
-To create a production version of your app:
+To create a production version:
 
 ```bash
 npm run build
@@ -27,10 +27,4 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
-The adapter currently installed is for github pages, so swap out the desired adapter for your own setup.
-
-## Work in Progress
-
--   [ ]
+> To deploy, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
