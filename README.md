@@ -2,6 +2,8 @@
 
 Quickly calculate how much you need to pay off your credit cards each week to reach a zero dollar balance. We don't want to pay that interest! As noted in the title this project is a work in progress so there are going to be a lot of issues. Scroll down to view the list of items that I would like to work on and what has already been implemented.
 
+> Please note that this site not collect or store any credit card details (such as number, expiration date, CVC, etc.) on this website. We will never request this information through private messages or contact you for such details. See [PRIVACY.md](https://github.com/Anthony-Mariotti/Card-Calculator/blob/main/PRIVACY.md)
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
