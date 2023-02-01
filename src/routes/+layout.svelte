@@ -73,7 +73,7 @@
                 <div class="hidden md:block">
                     <div class="ml-4 flex items-center md:ml-6">
                         <a
-                            href="https://github.com/Anthony-Mariotti/CardCalculator"
+                            href="https://github.com/Anthony-Mariotti/Card-Calculator"
                             class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                         >
                             <span class="sr-only">Open github</span>
@@ -185,7 +185,7 @@
             <div class="border-t border-gray-700 pt-4 pb-3">
                 <div class="flex items-center px-5">
                     <a
-                        href="https://github.com/Anthony-Mariotti/CardCalculator"
+                        href="https://github.com/Anthony-Mariotti/Card-Calculator"
                         class="ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                     >
                         <span class="sr-only">Open github</span>
